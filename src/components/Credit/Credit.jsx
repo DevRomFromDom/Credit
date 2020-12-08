@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./Credit.module.scss";
 import Information from "../Information/Information";
-import { Input } from "@skbkontur/react-ui";
+import { Button, Input } from "@skbkontur/react-ui";
 import { addSpaces } from "../Spaces/AddSpaces";
 import PercentButton from "./PercentButtons/PercentButton";
 import { removeSpaces } from "../Spaces/RemoveSpaces";
@@ -52,13 +52,13 @@ const Credit = () => {
     });
 
     useEffect(() => {
-        if (price !== "" && inputFocus === 0) {
+        if (price !== "" && inputFocus === 0 && firstPayPercent !== 0) {
             const newFirstPay = Math.round(
                 (+removeSpaces(price) / 100) * firstPayPercent
             );
             setFirstPay(addSpaces(newFirstPay));
         }
-        if (firstPay !== "" && inputFocus === 1) {
+        if (firstPay !== "" && inputFocus === 1 && firstPayPercent !== 0) {
             const newPrice = Math.round(
                 (+removeSpaces(firstPay) / firstPayPercent) * 100
             );
@@ -84,6 +84,10 @@ const Credit = () => {
         setFirstPayPercent(+e.target.value);
     };
 
+    const removeFirstPayPercent =()=>{
+        setFirstPayPercent(0)
+    }
+
     const save = async () => {
         if (!(await validationContainerRef.current?.validate())) {
             return;
@@ -96,12 +100,31 @@ const Credit = () => {
         setYears("");
         setFirstPay("");
         setPercent("");
+        setFirstPayPercent(0)
         localStorage.clear();
         e.preventDefault();
     };
 
     const inputPrice = useRef();
     const inputFirstPay = useRef();
+
+    const handleChangePrice = (e) => {
+        setInputFocus(0);
+        if (+removeSpaces(e.target.value) > +removeSpaces(price)) {
+            console.log("3");
+            priceFocus();
+        }
+        setPrice(addSpaces(e.target.value));
+    };
+
+    const handleChangeFirstPay = (e) => {
+        setInputFocus(1);
+        if (+removeSpaces(e.target.value) > +removeSpaces(firstPay)) {
+            console.log("3");
+            firstPayFocus();
+        }
+        setFirstPay(addSpaces(e.target.value));
+    };
 
     const priceFocus = async () => {
         await inputPrice.current.blur();
@@ -138,11 +161,7 @@ const Credit = () => {
                                 type="text"
                                 size="small"
                                 mask="99999999999"
-                                onChange={(e) => {
-                                    setPrice(addSpaces(e.target.value));
-                                    priceFocus();
-                                    setInputFocus(0);
-                                }}
+                                onChange={(e) => handleChangePrice(e)}
                                 value={price}
                                 maskChar=" "
                                 formatChars={formatChars}
@@ -168,11 +187,7 @@ const Credit = () => {
                                 type="text"
                                 size="small"
                                 mask="9999999999"
-                                onChange={(e) => {
-                                    setFirstPay(addSpaces(e.target.value));
-                                    firstPayFocus();
-                                    setInputFocus(1);
-                                }}
+                                onChange={(e) => handleChangeFirstPay(e)}
                                 value={firstPay}
                                 maskChar=" "
                                 formatChars={formatChars}
@@ -190,6 +205,7 @@ const Credit = () => {
                             firstPayPercents={firstPayPercents}
                             firstPayPercent={firstPayPercent}
                             changeFirstPayPercent={changeFirstPayPercent}
+                            removeFirstPayPercent={removeFirstPayPercent}
                         />
                     </div>
                     <div className={styles.input}>
@@ -213,8 +229,16 @@ const Credit = () => {
                         />
                     </div>
                     <div className={styles.submit}>
-                        <button onClick={save}>Save</button>
-                        <button onClick={(e) => clear(e)}>Clear</button>
+                        <Button use="success" onClick={save} width="45%">
+                            Save
+                        </Button>
+                        <Button
+                            use="default"
+                            onClick={(e) => clear(e)}
+                            width="45%"
+                        >
+                            Clear
+                        </Button>
                     </div>
                 </div>
             </ValidationContainer>

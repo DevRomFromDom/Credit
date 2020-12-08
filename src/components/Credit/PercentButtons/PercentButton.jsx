@@ -5,15 +5,21 @@ const PercentButton = ({
     firstPayPercents,
     firstPayPercent,
     changeFirstPayPercent,
+    removeFirstPayPercent,
 }) => {
     if (firstPayPercents) {
         return firstPayPercents.map((el, i) => {
             return (
                 <button
                     key={i}
-                    className={el === firstPayPercent? styles.pay_percent_select : styles.pay_percent}
+                    className={
+                        el === firstPayPercent
+                            ? styles.pay_percent_select
+                            : styles.pay_percent
+                    }
                     value={el}
                     onClick={changeFirstPayPercent}
+                    onDoubleClick={removeFirstPayPercent}
                 >{`${el} %`}</button>
             );
         });

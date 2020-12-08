@@ -1,24 +1,25 @@
 .main{
+    padding: 33px 0 0 0;
     width: 100%;
     height: 100%;
+
 }
 .info {
     position: relative;
-    margin: 10px;
     border-radius: 5px;
-    background-color: gray;
+    background-color: rgb(219, 219, 219);
     height: 100%;
-    width: 105%;
+    width: 100%;
     padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 .info_cart {
-    margin: 7px;
+    padding: 7px;
     display: flex;
     flex-direction: column;
-    min-width: 40%;
+    min-width: 50%;
     height: 50%;
 }
 .info_cart_lable {

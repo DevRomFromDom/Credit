@@ -29,7 +29,7 @@ export const validate = createValidator((builder) => {
             builder.invalid(
                 (firstPay) => +removeSpaces(firstPay) > f,
                 "Первоначальный взнос не может быть больше стоимости недвижимости",
-                "immediate"
+                "submit"
             );
         }
     )
