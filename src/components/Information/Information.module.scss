@@ -1,0 +1,40 @@
+.main{
+    width: 100%;
+    height: 100%;
+}
+.info {
+    position: relative;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: gray;
+    height: 100%;
+    width: 105%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.info_cart {
+    margin: 7px;
+    display: flex;
+    flex-direction: column;
+    min-width: 40%;
+    height: 50%;
+}
+.info_cart_lable {
+    width: 100%;
+    font-size: 10px;
+}
+.info_payment {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.info_credit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    
+}

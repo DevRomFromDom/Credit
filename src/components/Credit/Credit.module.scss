@@ -1,0 +1,28 @@
+.main {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.form {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: gray;
+    border-radius: 5px;
+}
+.input {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+.submit {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.first_pay_percent{
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+}
