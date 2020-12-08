@@ -111,7 +111,6 @@ const Credit = () => {
     const handleChangePrice = (e) => {
         setInputFocus(0);
         if (+removeSpaces(e.target.value) > +removeSpaces(price)) {
-            console.log("3");
             priceFocus();
         }
         setPrice(addSpaces(e.target.value));
@@ -120,7 +119,6 @@ const Credit = () => {
     const handleChangeFirstPay = (e) => {
         setInputFocus(1);
         if (+removeSpaces(e.target.value) > +removeSpaces(firstPay)) {
-            console.log("3");
             firstPayFocus();
         }
         setFirstPay(addSpaces(e.target.value));

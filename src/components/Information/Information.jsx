@@ -4,7 +4,6 @@ import { salaryF, monthPaymentF, overPayF, creditBodyF } from "./Functions";
 import { addSpaces } from "../Spaces/AddSpaces";
 
 const Information = ({ price, firstPay, years, percent }) => {
-    // console.log(price, firstPay, years, percent);
     const creditBody = creditBodyF(price, firstPay);
     const monthPayment = monthPaymentF(percent, years, creditBody);
     const salary = salaryF(monthPayment);
