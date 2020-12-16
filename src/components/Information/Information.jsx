@@ -1,58 +1,46 @@
 import React from "react";
 import styles from "./Information.module.scss";
-import { salaryF, monthPaymentF, overPayF, creditBodyF } from "./Functions";
-import { addSpaces } from "../Spaces/AddSpaces";
+import {
+    getCreditBody,
+    getMonthPayment,
+    getSalary,
+    getOverPay,
+} from "../helpers/calculations";
+import { addSpaces } from "../helpers/addSpaces";
+
+const Item = ({ value, title }) => {
+    const processEdgeConditions = (value) => {
+        return isNaN(value) ||
+            value === Infinity ||
+            value === -Infinity ||
+            value < 0
+            ? 0
+            : value;
+    };
+    return (
+        <div className={styles.info_cart}>
+            <label className={styles.info_cart_lable}>{title}</label>
+            {addSpaces(processEdgeConditions(value).toFixed(2))} &#8381;
+        </div>
+    );
+};
 
 const Information = ({ price, firstPay, years, percent }) => {
-    const creditBody = creditBodyF(price, firstPay);
-    const monthPayment = monthPaymentF(percent, years, creditBody);
-    const salary = salaryF(monthPayment);
-    const overPay = overPayF(monthPayment, years, price, firstPay);
+    const creditBody = getCreditBody(price, firstPay);
+    const monthPayment = getMonthPayment(percent, years, creditBody);
+    const salary = getSalary(monthPayment);
+    const overPay = getOverPay(monthPayment, years, price, firstPay);
 
     return (
         <div className={styles.main}>
             <div className={styles.info}>
                 <div className={styles.info_payment}>
-                    <div className={styles.info_cart}>
-                        <label className={styles.info_cart_lable}>
-                            Ежемесячный платеж
-                        </label>
-                        {isNaN(monthPayment) ||
-                        monthPayment === Infinity ||
-                        monthPayment === -Infinity || monthPayment <0
-                            ? 0
-                            : addSpaces(monthPayment.toFixed(2))}{" "}
-                        &#8381;
-                    </div>
-                    <div className={styles.info_cart}>
-                        <label className={styles.info_cart_lable}>
-                            Необходимый доход
-                        </label>
-                        {isNaN(salary) ||
-                        salary === Infinity ||
-                        salary === -Infinity || salary < 0
-                            ? 0
-                            : addSpaces(salary.toFixed(2))}{" "}
-                        &#8381;
-                    </div>
+                    <Item value={monthPayment} title={"Ежемесячный платеж"} />
+                    <Item value={salary} title={"Необходимый доход"} />
                 </div>
                 <div className={styles.info_credit}>
-                    <div className={styles.info_cart}>
-                        <label className={styles.info_cart_lable}>
-                            Переплата
-                        </label>
-                        {isNaN(overPay) || overPay <0 ? 0 : addSpaces(overPay.toFixed(0))}{" "}
-                        &#8381;
-                    </div>
-                    <div className={styles.info_cart}>
-                        <label className={styles.info_cart_lable}>
-                            Тело кредита
-                        </label>
-                        {isNaN(creditBody) || creditBody === 0 || creditBody <0 
-                            ? 0
-                            : addSpaces(creditBody)}{" "}
-                        &#8381;
-                    </div>
+                    <Item value={overPay} title={"Переплата"} />
+                    <Item value={creditBody} title={"Тело кредита"} />
                 </div>
             </div>
         </div>

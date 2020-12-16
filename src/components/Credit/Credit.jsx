@@ -2,111 +2,118 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./Credit.module.scss";
 import Information from "../Information/Information";
 import { Button, Input } from "@skbkontur/react-ui";
-import { addSpaces } from "../Spaces/AddSpaces";
-import PercentButton from "./PercentButtons/PercentButton";
-import { removeSpaces } from "../Spaces/RemoveSpaces";
-import { validate } from "./validations";
+import { addSpaces } from "../helpers/addSpaces";
+import PercentButtons from "./PercentButtons/PercentButtons";
+import { removeSpaces } from "../helpers/removeSpaces";
+import { validate } from "../helpers/validations";
 import {
     ValidationContainer,
     ValidationWrapper,
 } from "@skbkontur/react-ui-validations";
 
+const formatChars = {
+    9: "[0-9 ]",
+};
+
+const getCreditInfo = () => {
+    const {
+        price = "",
+        firstPay = "",
+        years = "",
+        percent = "",
+        firstPayPercent = 0,
+    } = JSON.parse(localStorage.getItem("creditInfo")) ?? {};
+    return { price, firstPay, years, percent, firstPayPercent };
+};
+
 const Credit = () => {
     const [inputFocus, setInputFocus] = useState(0);
-    const memo = JSON.parse(localStorage.getItem("item"));
+    const memo = getCreditInfo();
     const firstPayPercents = [10, 15, 20, 25, 30];
-    const [firstPayPercent, setFirstPayPercent] = useState(() => {
-        let initialState = 0;
-        if (memo !== null) {
-            initialState = +memo.firstPayPercent;
-        }
-        return initialState;
-    });
-    const [price, setPrice] = useState(() => {
-        let initialState = "";
-        if (memo !== null) {
-            initialState = memo.price;
-        }
-        return initialState;
-    });
-    const [firstPay, setFirstPay] = useState(() => {
-        let initialState = "";
-        if (memo !== null) {
-            initialState = memo.firstPay;
-        }
-        return initialState;
-    });
-    const [years, setYears] = useState(() => {
-        let initialState = "";
-        if (memo !== null) {
-            initialState = memo.years;
-        }
-        return initialState;
-    });
-    const [percent, setPercent] = useState(() => {
-        let initialState = "";
-        if (memo !== null) {
-            initialState = memo.percent;
-        }
-        return initialState;
-    });
+    const [price, setPrice] = useState(memo.price);
+    const [firstPayPercent, setFirstPayPercent] = useState(
+        memo.firstPayPercent
+    );
+    const [firstPay, setFirstPay] = useState(memo.firstPay);
+    const [years, setYears] = useState(memo.years);
+    const [percent, setPercent] = useState(memo.percent);
 
     useEffect(() => {
-        if (price !== "" && inputFocus === 0 && firstPayPercent !== 0) {
+        if (
+            price !== "" &&
+            inputFocus === 0 &&
+            firstPayPercent !== 0 &&
+            firstPayPercent !== "0"
+        ) {
             const newFirstPay = Math.round(
                 (+removeSpaces(price) / 100) * firstPayPercent
             );
             setFirstPay(addSpaces(newFirstPay));
         }
-        if (firstPay !== "" && inputFocus === 1 && firstPayPercent !== 0) {
+        if (
+            firstPay !== "" &&
+            inputFocus === 1 &&
+            firstPayPercent !== 0 &&
+            firstPayPercent !== "0"
+        ) {
             const newPrice = Math.round(
                 (+removeSpaces(firstPay) / firstPayPercent) * 100
             );
             setPrice(addSpaces(newPrice));
         }
-        if (price === "" && +removeSpaces(firstPay) === 1) {
+        if (
+            price === "" &&
+            +removeSpaces(firstPay) === 1 &&
+            firstPayPercent !== 0
+        ) {
             setFirstPay("");
         }
-        if (firstPay === "" && inputFocus === 1) {
+        if (firstPay === "" && inputFocus === 1 && firstPayPercent !== 0) {
             setPrice("");
         }
     }, [firstPayPercent, price, firstPay, inputFocus]);
 
-    const saveItem = {
+    const saveCreditInfo = {
         price: price.toString(),
         firstPay: firstPay.toString(),
         years: years.toString(),
         percent: percent.toString(),
-        firstPayPercent: `${firstPayPercent}`.toString(),
+        firstPayPercent: firstPayPercent.toString(),
     };
 
     const changeFirstPayPercent = (e) => {
-        setFirstPayPercent(+e.target.value);
+        const newPercent = +e.target.value;
+        setFirstPayPercent(firstPayPercent === newPercent ? 0 : newPercent);
     };
-
-    const removeFirstPayPercent =()=>{
-        setFirstPayPercent(0)
-    }
 
     const save = async () => {
         if (!(await validationContainerRef.current?.validate())) {
             return;
         }
-        localStorage.setItem("item", JSON.stringify(saveItem));
+        localStorage.setItem("creditInfo", JSON.stringify(saveCreditInfo));
     };
 
-    const clear = (e) => {
+    const clear = () => {
         setPrice("");
         setYears("");
         setFirstPay("");
         setPercent("");
-        setFirstPayPercent(0)
+        setFirstPayPercent(0);
         localStorage.clear();
-        e.preventDefault();
     };
 
     const inputPrice = useRef();
     const inputFirstPay = useRef();
+
+    const priceFocus = async () => {
+        await inputPrice.current.blur();
+        await inputPrice.current.focus();
+    };
+
+    const firstPayFocus = async () => {
+        await inputFirstPay.current.blur();
+        await inputFirstPay.current.focus();
+    };
 
     const handleChangePrice = (e) => {
         setInputFocus(0);
@@ -124,19 +131,6 @@ const Credit = () => {
         setFirstPay(addSpaces(e.target.value));
     };
 
-    const priceFocus = async () => {
-        await inputPrice.current.blur();
-        await inputPrice.current.focus();
-    };
-
-    const firstPayFocus = async () => {
-        await inputFirstPay.current.blur();
-        await inputFirstPay.current.focus();
-    };
-
-    const formatChars = {
-        9: "[0-9 ]",
-    };
     const validationContainerRef = useRef(null);
 
     const validation = validate({ price, firstPay, years, percent });
@@ -199,11 +193,10 @@ const Credit = () => {
                         </ValidationWrapper>
                     </div>
                     <div className={styles.first_pay_percent}>
-                        <PercentButton
+                        <PercentButtons
                             firstPayPercents={firstPayPercents}
                             firstPayPercent={firstPayPercent}
                             changeFirstPayPercent={changeFirstPayPercent}
-                            removeFirstPayPercent={removeFirstPayPercent}
                         />
                     </div>
                     <div className={styles.input}>

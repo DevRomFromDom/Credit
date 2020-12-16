@@ -1,0 +1,23 @@
+.pay_percent {
+    height: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        transition-duration: 0.5s;
+        background-color: rgb(238, 253, 198);
+        outline: 1.5px solid rgb(98, 209, 98);
+    }
+}
+.pay_percent_select {
+    outline: none;
+    height: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(212, 246, 119);
+    &:focus{
+        outline: 1.5px solid rgb(98, 209, 98);
+    }
+}
