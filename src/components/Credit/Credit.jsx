@@ -39,28 +39,17 @@ const Credit = () => {
     const [percent, setPercent] = useState(memo.percent);
 
     useEffect(() => {
-        if (
-            price !== "" &&
-            inputFocus === 0 &&
-            firstPayPercent !== 0 &&
-            firstPayPercent !== "0"
-        ) {
-            const newFirstPay = Math.round(
-                (+removeSpaces(price) / 100) * firstPayPercent
-            );
-            setFirstPay(addSpaces(newFirstPay));
-        }
-        if (
-            firstPay !== "" &&
-            inputFocus === 1 &&
-            firstPayPercent !== 0 &&
-            firstPayPercent !== "0"
-        ) {
-            const newPrice = Math.round(
-                (+removeSpaces(firstPay) / firstPayPercent) * 100
-            );
-            setPrice(addSpaces(newPrice));
-        }
+        // if (
+        //     firstPay !== "" &&
+        //     inputFocus === 1 &&
+        //     firstPayPercent !== 0 &&
+        //     firstPayPercent !== "0"
+        // ) {
+        //     const newPrice = Math.round(
+        //         (+removeSpaces(firstPay) / firstPayPercent) * 100
+        //     );
+        //     setPrice(addSpaces(newPrice));
+        // }
         if (
             price === "" &&
             +removeSpaces(firstPay) === 1 &&
@@ -68,10 +57,20 @@ const Credit = () => {
         ) {
             setFirstPay("");
         }
-        if (firstPay === "" && inputFocus === 1 && firstPayPercent !== 0) {
-            setPrice("");
-        }
     }, [firstPayPercent, price, firstPay, inputFocus]);
+
+    useEffect(() => {
+        if (
+            price !== "" &&
+            +firstPayPercent !== 0
+            
+        ) {
+            const newFirstPay = Math.round(
+                (+removeSpaces(price) / 100) * firstPayPercent
+            );
+            setFirstPay(addSpaces(newFirstPay));
+        }
+    }, [firstPayPercent,price]);
 
     const saveCreditInfo = {
         price: price.toString(),
@@ -149,13 +148,13 @@ const Credit = () => {
                             <Input
                                 autoFocus={true}
                                 ref={inputPrice}
-                                rightIcon="&#8381;"
-                                type="text"
-                                size="small"
-                                mask="99999999999"
+                                rightIcon='&#8381;'
+                                type='text'
+                                size='small'
+                                mask='99999999999'
                                 onChange={(e) => handleChangePrice(e)}
                                 value={price}
-                                maskChar=" "
+                                maskChar=' '
                                 formatChars={formatChars}
                                 onFocus={(e) =>
                                     e.target.setSelectionRange(
@@ -175,13 +174,13 @@ const Credit = () => {
                         >
                             <Input
                                 ref={inputFirstPay}
-                                rightIcon="&#8381;"
-                                type="text"
-                                size="small"
-                                mask="9999999999"
+                                rightIcon='&#8381;'
+                                type='text'
+                                size='small'
+                                mask='9999999999'
                                 onChange={(e) => handleChangeFirstPay(e)}
                                 value={firstPay}
-                                maskChar=" "
+                                maskChar=' '
                                 formatChars={formatChars}
                                 onFocus={(e) =>
                                     e.target.setSelectionRange(
@@ -204,8 +203,8 @@ const Credit = () => {
                         <Input
                             value={years}
                             onValueChange={setYears}
-                            mask="99"
-                            maskChar=" "
+                            mask='99'
+                            maskChar=' '
                             rightIcon={"ЛЕТ"}
                         />
                     </div>
@@ -215,18 +214,18 @@ const Credit = () => {
                             value={percent}
                             onValueChange={setPercent}
                             rightIcon={"%"}
-                            mask="99"
-                            maskChar=" "
+                            mask='99'
+                            maskChar=' '
                         />
                     </div>
                     <div className={styles.submit}>
-                        <Button use="success" onClick={save} width="45%">
+                        <Button use='success' onClick={save} width='45%'>
                             Save
                         </Button>
                         <Button
-                            use="default"
+                            use='default'
                             onClick={(e) => clear(e)}
-                            width="45%"
+                            width='45%'
                         >
                             Clear
                         </Button>
